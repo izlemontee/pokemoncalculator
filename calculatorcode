@@ -1,0 +1,214 @@
+import openpyxl
+from openpyxl import Workbook
+
+#array in order: normal, fighting, flying, poison, ground, 
+#rock, bug, ghost, steel, fire, water, grass, electric
+#psychic, ice, dragon, dark, fairy
+
+#----------types to be listed in terms of defensive capabilities----------
+normal =   [1,2,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1]
+fighting = [1,1,2,1,1,0.5,0.5,1,1,1,1,1,1,2,1,1,0.5,1]
+flying =   [1,0.5,1,1,0,2,0.5,1,1,1,1,0.5,2,1,2,1,1,1,1]
+poison =   [1,0.5,1,0.5,2,1,0.5,1,1,1,1,0.5,1,2,1,1,1,0.5]
+ground=    [1,1,1,0.5,1,0.5,1,1,1,1,2,2,0,1,2,1,1,1]
+rock=      [0.5,2,0.5,0.5,2,1,1,1,2,0.5,2,2,1,1,1,1,1,1]
+bug=       [1,0.5,2,1,0.5,2,1,1,1,2,1,0.5,1,1,1,1,1,1]
+ghost=     [0,0,1,0.5,1,1,0.5,2,1,1,1,1,1,1,1,1,2,1]
+steel =    [0.5,2,0.5,0,2,0.5,0.5,1,0.5,2,1,0.5,1,0.5,0.5,0.5,1,0.5]
+fire=      [1,1,1,1,2,2,0.5,1,0.5,0.5,2,0.5,1,1,0.5,1,1,0.5]
+water=     [1,1,1,1,1,1,1,1,0.5,0.5,0.5,2,2,1,0.5,1,1,1]
+grass=     [1,1,2,2,0.5,1,2,1,1,2,0.5,0.5,0.5,1,2,1,1,1]
+electric=  [1,1,0.5,1,2,1,1,1,0.5,1,1,1,0.5,1,1,1,1,1]
+psychic=   [1,0.5,1,1,1,1,2,2,1,1,1,1,1,0.5,1,1,2,1]
+ice=       [1,2,1,1,1,2,1,1,2,2,1,1,1,1,0.5,1,1,1]
+dragon=    [1,1,1,1,1,1,1,1,1,0.5,0.5,0.5,0.5,1,2,2,1,2]
+dark =     [1,2,1,1,1,1,2,0.5,1,1,1,1,1,0,1,1,0.5,2]
+fairy=     [1,0.5,1,2,1,1,0.5,1,2,1,1,1,1,1,1,0,0.5,1]
+nil =      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+#--------------------------------------------------------------------------
+#function for type effectiveness calculation
+def typecalculation():
+#function to determine what type it is based on user's input
+    def typeinput():
+        while True:
+            typestring = input("Enter type "+typenostring+' (type "nil" if there is no type):')
+
+            if(typestring == "normal"):
+                pokemontype = normal
+            elif(typestring == "fighting"):
+                pokemontype = fighting
+            elif(typestring == "flying"):
+                pokemontype = flying
+            elif(typestring == "poison"):
+                pokemontype = poison
+            elif(typestring == "ground"):
+                pokemontype = ground
+            elif(typestring == "rock"):
+                pokemontype = rock
+            elif(typestring == "bug"):
+                pokemontype = bug
+            elif(typestring == "ghost"):
+                pokemontype = ghost
+            elif(typestring == "steel"):
+                pokemontype = steel
+            elif(typestring == "fire"):
+                pokemontype = fire
+            elif(typestring == "water"):
+                pokemontype = water
+            elif(typestring == "grass"):
+                pokemontype = grass
+            elif(typestring == "electric"):
+                pokemontype = electric
+            elif(typestring == "psychic"):
+                pokemontype = psychic
+            elif(typestring == "ice"):
+                pokemontype = ice
+            elif(typestring == "dragon"):
+                pokemontype = dragon
+            elif(typestring == "dark"):
+                pokemontype = dark
+            elif(typestring == "fairy"):
+                pokemontype = fairy
+            elif(typestring == "nil"):
+                pokemontype = nil
+            else:
+                print("Invalid type. Enter again.")
+                continue
+            #repeat the loop until a valid condition is met
+            break
+        if(typeno == 0):
+            type1list.append(typestring) #append to list of type 1
+        elif(typeno == 1):
+            type2list.append(typestring) #append to list of type 2
+        return pokemontype
+#--------------------------------------------------------------------------
+    #ability calculation
+    def typeability():
+        if (ability == "levitate"):
+            typetotal[4] = 0
+            #ground is 0
+        if (ability == "volt absorb" or ability == "lightning rod" or ability == "motor drive"):
+            typetotal[12] = 0
+            #electric is 0
+        if (ability == "flash fire"):
+            typetotal[9] = 0
+            #fire is 0
+        if (ability == "storm drain" or ability == "water absorb"):
+            typetotal[10] = 0
+            #water is 0
+        if (ability == "sap sipper"):
+            typetotal[11] = 0
+            #grass is 0
+        if (ability == "heatproof"):
+            typetotal[9] = typetotal[9]*0.5
+            #fire is halved
+        if (ability == "thick fat"):
+            typetotal[9] = typetotal[9]*0.5
+            typetotal[14] = typetotal[14]*0.5
+            #fire and ice are halved
+        if (ability == "dry skin"):
+            typetotal[9] = typetotal[9]*1.25
+            typetotal[10] = 0
+            #fire is 1.25x, water is 0
+    
+#--------------------------------------------------------------------------
+    typelist =[]#raw data for collecting the 2 types
+
+    #collect 2 types
+    for typeno in range(2):
+        typenostring = str(typeno+1)
+        pokemontype = typeinput()
+        typelist.append(pokemontype)
+
+    #assign the list to their respective types
+    type1 = typelist[0]
+    type2 = typelist[1]
+    
+    #total type effectiveness of the pokemon
+    typetotal = []
+    for num1,num2 in zip(type1,type2):
+        typetotal.append(num1*num2)
+    ability = input("Enter ability: ")
+    pokemonability = typeability()
+    abilitylist.append(ability) #append to list of abilities
+    return(typetotal)
+#--------------------------------------------------------------------------
+
+#empty lists for append
+pokemonnames = []
+pokemontypetotal = []
+type1list = []
+type2list = []
+abilitylist = []
+
+#declaring each of the 6 pokemon
+for pokemonno in range(6):
+    pokemonnostring = str(pokemonno+1)
+    pokemonname = input("Pokemon " + pokemonnostring + " name:")
+    typetotal = typecalculation()
+    pokemonnames.append(pokemonname)
+    pokemontypetotal.append(typetotal) #list of total type effectiveness per pokemon
+
+#print(pokemonnames)
+
+pokemon1 = pokemontypetotal[0]
+pokemon2 = pokemontypetotal[1]
+pokemon3 = pokemontypetotal[2]
+pokemon4 = pokemontypetotal[3]
+pokemon5 = pokemontypetotal[4]
+pokemon6 = pokemontypetotal[5]
+
+#adding total type effectiveness of whole team
+typetotalfinal = []
+for num1,num2,num3,num4,num5,num6 in zip(pokemon1,pokemon2,pokemon3,pokemon4,pokemon5,pokemon6):
+    typetotalfinal.append(num1+num2+num3+num4+num5+num6)
+#print(typetotalfinal)
+
+wb = Workbook() #create a blank workbook
+sheet = wb.active #active sheet in the workbook
+sheet.title = "Team Calculation" #change sheet title
+
+#column names
+columnnames = ["Pokemon", "Type 1", "Type 2","Ability","Normal","Fighting","Flying","Poison","Ground","Rock","Bug","Ghost","Steel","Fire","Water","Grass","Electric","Psychic","Ice","Dragon","Dark","Fairy"]
+for i in range(len(columnnames)):
+    temp = columnnames[i]
+    sheet.cell(row=1,column=i+1).value = temp
+
+#adding the names
+for i in range(len(pokemonnames)):
+    temp = pokemonnames[i]
+    sheet.cell(row=i+2,column=1).value = temp
+
+#listing down type 1 of each pokemon
+for i in range(len(type1list)):
+    temp = type1list[i]
+    sheet.cell(row=i+2,column=2).value = temp
+
+#listing down type 2 of each pokemon
+for i in range(len(type2list)):
+    temp = type2list[i]
+    sheet.cell(row=i+2,column=3).value = temp
+
+#listing down ability of each pokemon
+for i in range(len(abilitylist)):
+    temp = abilitylist[i]
+    sheet.cell(row=i+2,column=4).value = temp
+
+#listing down type effectiveness of each pokemon, use pokemontypetotal
+for i in range(len(pokemontypetotal)):
+    temp = pokemontypetotal[i]
+    for j in range(len(temp)):
+        temp2 = temp[j]
+        sheet.cell(row=i+2,column=j+5).value = temp2
+
+sheet["A9"] = "Total"
+#adding the total type effectiveness
+for i in range(len(typetotalfinal)):
+    temp = typetotalfinal[i]
+    sheet.cell(row = 9, column = i+5).value = temp
+
+wbname = input("Save spreadsheet name: ")
+wb.save(wbname+".xlsx")
+print(wbname+".xlsx has been saved.")
+
